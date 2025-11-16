@@ -1,27 +1,28 @@
 pipeline {
     agent any
-
-    tools {
-        maven 'maven3'
-        jdk 'jdk17'
-    }
-
     stages {
-
-        stage('Build Maven') {
+        stage('Build') {
             steps {
-                dir('demo-backend') {
-                    sh 'mvn -B -DskipTests package'
+                script {
+                    try {
+                        echo "Compilation en cours..."
+                        sh 'exit 1'  // Simulation d'une erreur
+                    } catch (Exception e) {
+                        echo "Erreur d�tect�e dans le build !"
+                        currentBuild.result = 'FAILURE'
+                    }
                 }
             }
         }
-
-        stage('Archive Artifact') {
-            steps {
-                archiveArtifacts artifacts: 'demo-backend/target/*.jar', fingerprint: true
-            }
-        }
-
     }
-    
+    post {
+        failure {
+            echo "Le pipeline a �chou�, envoi d'une notification..."
+            sh 'echo "Erreur d�tect�e" > erreur.log'
+            archiveArtifacts artifacts: 'erreur.log', fingerprint: true
+        }
+        success {
+            echo "Pipeline ex�cut� avec succ�s !"
+        }
+    }
 }
