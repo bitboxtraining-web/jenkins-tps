@@ -9,13 +9,15 @@ pipeline {
     stages {
         stage('Build Maven') {
             steps {
-                sh 'mvn -B -DskipTests package'
+                dir('demo-backend') {
+                    sh 'mvn -B -DskipTests package'
+                }
             }
         }
 
         stage('Archive Artifact') {
             steps {
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                archiveArtifacts artifacts: 'java-app/target/*.jar', fingerprint: true
             }
         }
     }
