@@ -7,6 +7,7 @@ pipeline {
     }
 
     stages {
+
         stage('Build Maven') {
             steps {
                 dir('demo-backend') {
@@ -17,8 +18,9 @@ pipeline {
 
         stage('Archive Artifact') {
             steps {
-                archiveArtifacts artifacts: 'java-app/target/*.jar', fingerprint: true
+                archiveArtifacts artifacts: 'demo-backend/target/*.jar', fingerprint: true
             }
         }
+
     }
 }
