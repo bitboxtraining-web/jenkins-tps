@@ -1,19 +1,16 @@
 pipeline {
     agent any
-    environment {
-        ARTIFACT_NAME = 'app.tar.gz'
-    }
+
     stages {
-        stage('Build') {
+        stage('Build Maven') {
             steps {
-                sh 'echo "Contenu de l\'application" > app.txt'
-                sh 'tar -czf ${ARTIFACT_NAME} app.txt'
-                archiveArtifacts artifacts: ARTIFACT_NAME, fingerprint: true
+                sh 'mvn -B -DskipTests package'
             }
         }
-        stage('Deploy') {
+
+        stage('Archive Artifact') {
             steps {
-                echo "D�ploiement de ${ARTIFACT_NAME}"
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
     }
